@@ -1,0 +1,14 @@
+name: Setup
+description: Setup Node.js and install dependencies
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version-file: .nvmrc
+
+    - name: Install dependencies
+      run: yarn install --immutable
+      shell: bash

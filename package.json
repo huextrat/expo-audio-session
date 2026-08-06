@@ -1,0 +1,72 @@
+{
+  "name": "expo-audio-session",
+  "version": "0.0.0-development",
+  "description": "Expo module to resume the user's background music (Spotify, Apple Music…) after your app plays audio — deactivates the iOS AVAudioSession that expo-video leaves active",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "node internal/module_scripts/build.js",
+    "clean": "node internal/module_scripts/clean.js",
+    "lint": "eslint src/",
+    "test": "node internal/module_scripts/test.js",
+    "prepare": "node internal/module_scripts/prepare.js",
+    "release": "semantic-release"
+  },
+  "keywords": [
+    "react-native",
+    "expo",
+    "expo-audio-session",
+    "ExpoAudioSession",
+    "avaudiosession",
+    "audio-session",
+    "audio-focus",
+    "background-audio",
+    "expo-video"
+  ],
+  "repository": "https://github.com/huextrat/expo-audio-session",
+  "bugs": {
+    "url": "https://github.com/huextrat/expo-audio-session/issues"
+  },
+  "author": "Hugo Extrat <extrat.h@gmail.com> (huextrat)",
+  "license": "MIT",
+  "homepage": "https://github.com/huextrat/expo-audio-session#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@commitlint/cli": "^21.0.1",
+    "@commitlint/config-conventional": "^21.0.1",
+    "@react-native/jest-preset": "^0.85.3",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@types/jest": "^30.0.0",
+    "@types/react": "~19.2.15",
+    "babel-preset-expo": "~56.0.11",
+    "commitlint": "^21.0.1",
+    "eslint": "~9.39.4",
+    "eslint-config-universe": "^15.0.3",
+    "expo": "^56.0.3",
+    "expo-module-scripts": "^56.0.2",
+    "jest": "^30.4.2",
+    "prettier": "^3.0.0",
+    "react-native": "0.85.3",
+    "semantic-release": "^25.0.3",
+    "typescript": "^6.0.3"
+  },
+  "jest": {
+    "preset": "expo-module-scripts"
+  },
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  }
+}
