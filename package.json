@@ -1,6 +1,6 @@
 {
   "name": "expo-audio-session",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Expo module to resume the user's background music (Spotify, Apple Music…) after your app plays audio — deactivates the iOS AVAudioSession that expo-video leaves active",
   "main": "build/index.js",
   "types": "build/index.d.ts",
