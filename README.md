@@ -37,8 +37,6 @@ On iOS, the only way to tell other apps they can resume is to deactivate your au
 ## ✨ Features
 
 - Deactivate the iOS audio session with `.notifyOthersOnDeactivation` so background music resumes
-- Automatic retry while audio I/O winds down (deactivating a busy session throws)
-- Pre-set a mixable playback category at startup, so the very first muted autoplay video doesn't cut the user's music on a cold app start
 - `deactivateKeepingPlayback` helper for players that keep playing muted (feeds, loops)
 - No config plugin needed — just install and rebuild
 - Safe to call from shared code — no-op on Android
@@ -72,12 +70,7 @@ npx expo install expo-audio-session
 ```typescript
 import ExpoAudioSession from 'expo-audio-session';
 
-// 1. At app startup, before the first player is created (optional but
-// recommended): pre-set the mixable playback category so a muted autoplay
-// video doesn't cut the user's music on a cold app start.
-await ExpoAudioSession.prepareAsync();
-
-// 2. When your app is done outputting audio (video closed, player muted…):
+// When your app is done outputting audio (video closed, player muted…):
 // the user's background music resumes.
 await ExpoAudioSession.deactivateAsync();
 ```
@@ -98,7 +91,7 @@ export function FullscreenVideo({ uri }: { uri: string }) {
     return () => {
       // The screen closes → tell iOS we are done with audio so the user's
       // music resumes. The player is released on unmount, so audio I/O stops
-      // and deactivation succeeds (after a short retry).
+      // and deactivation succeeds.
       ExpoAudioSession.deactivateAsync().catch(() => {
         // Another player still outputs sound or the session is already
         // inactive: the music simply does not resume, never fatal.
@@ -125,25 +118,15 @@ await deactivateKeepingPlayback(player);
 
 ### 🔧 Methods
 
-#### `prepareAsync(): Promise<void>`
-
-Pre-set the mixable playback category (`.playback` / `.moviePlayback` / `[.mixWithOthers]`) while the session is still inactive. Call it **once at app startup**, before the first player is created.
-
-Why: `AVPlayer` implicitly activates the session the moment playback starts, *before* `expo-video`'s async session update has landed — on a cold app the category is still the default (non-mixable), so the very first muted autoplay video would cut the user's music. With the category set up front, that implicit activation mixes. `expo-video` keeps managing the options afterwards (removing `mixWithOthers` when a video plays audibly).
-
-No-op on Android.
-
 #### `deactivateAsync(options?: DeactivateOptions): Promise<void>`
 
-Deactivate the shared audio session, notifying other audio apps they can resume. Call it once your app is done outputting audio. Retries a few times while audio I/O winds down, and rejects if the session could not be deactivated (typically: another player is still outputting sound).
+Deactivate the shared audio session, notifying other audio apps they can resume. Call it once your app is done outputting audio. Rejects if the session could not be deactivated (typically: a player is still outputting sound).
 
 No-op on Android.
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `notifyOthersOnDeactivation` | `boolean` | `true` | Tell other audio apps they can resume — the whole point of the module |
-| `maxAttempts` | `number` | `3` | Deactivation attempts before rejecting |
-| `retryDelayMs` | `number` | `150` | Delay between attempts, in milliseconds |
 
 #### `deactivateKeepingPlayback(player: PausablePlayer, options?: DeactivateOptions): Promise<void>`
 
@@ -160,7 +143,6 @@ Deactivate the session under a player that keeps playing muted: briefly pauses t
 **🍎 iOS**
 - Full `AVAudioSession` support
 - `.notifyOthersOnDeactivation`
-- Automatic retry
 
 </td>
 <td width="33%" align="center">
@@ -226,15 +208,6 @@ Then rebuild your dev client. No call to this module is needed on Android — th
 **Problem**: `deactivateAsync()` rejects, or resolves but the music stays paused.
 
 **Solution**: iOS refuses to deactivate the session while audio I/O is running. Make sure **every** player is paused, released, or muted before calling `deactivateAsync()`. For a player that must keep playing muted, use `deactivateKeepingPlayback(player)`.
-
-</details>
-
-<details>
-<summary><strong>🥶 The very first muted video cuts the music</strong></summary>
-
-**Problem**: On a cold app start, a muted autoplay video pauses the user's music even though it makes no sound.
-
-**Solution**: Call `ExpoAudioSession.prepareAsync()` at app startup, before the first player is created. It pre-sets the mixable playback category, so the implicit session activation done by `AVPlayer` mixes with the user's music instead of interrupting it.
 
 </details>
 

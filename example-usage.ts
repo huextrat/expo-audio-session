@@ -3,18 +3,6 @@ import { type VideoPlayer } from 'expo-video';
 
 // Example usage of the Audio Session module
 export class AudioSessionExample {
-  // Call once at app startup, before the first video player is created:
-  // pre-sets the mixable playback category so the very first muted autoplay
-  // video does not cut the user's music on a cold app start.
-  static async prepare() {
-    try {
-      await ExpoAudioSession.prepareAsync();
-      console.log('Audio session prepared');
-    } catch (error) {
-      console.error('Failed to prepare audio session:', error);
-    }
-  }
-
   // Call when your app is done outputting audio (e.g. the user closed a
   // video that played with sound): background music resumes.
   static async resumeBackgroundMusic() {
@@ -24,16 +12,6 @@ export class AudioSessionExample {
     } catch (error) {
       // Audio I/O still running (another player outputs sound) or session
       // already inactive: music simply does not resume, never fatal.
-      console.error('Failed to deactivate audio session:', error);
-    }
-  }
-
-  // Same, with custom retry behavior.
-  static async resumeBackgroundMusicCustomRetries() {
-    try {
-      await ExpoAudioSession.deactivateAsync({ maxAttempts: 5, retryDelayMs: 100 });
-      console.log('Audio session deactivated, background music resumes');
-    } catch (error) {
       console.error('Failed to deactivate audio session:', error);
     }
   }

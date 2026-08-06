@@ -8,22 +8,6 @@ export interface DeactivateOptions {
    * @default true
    */
   notifyOthersOnDeactivation?: boolean;
-
-  /**
-   * Deactivating the session throws while audio I/O is still winding down (it
-   * takes a few ms after a pause) — the module retries instead of giving up,
-   * because a failed deactivation means the user's music never resumes.
-   *
-   * @default 3
-   */
-  maxAttempts?: number;
-
-  /**
-   * Delay between deactivation attempts, in milliseconds.
-   *
-   * @default 150
-   */
-  retryDelayMs?: number;
 }
 
 /**
